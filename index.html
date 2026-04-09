@@ -138,6 +138,11 @@
                 return;
             }
 
+             if(city.length < 3 || !/^[a-zA-Z\s]+$/.test(city)){
+                alert("Invalid city");
+                return;
+            }
+
             document.getElementById("Loading").style.display = "block";
             document.getElementById("output").innerHTML = "";
 
@@ -150,10 +155,12 @@
                 .then(res => res.json())
                 .then(data => {
 
-                    if(!data.current_condition){
-                        alert("City not fount");
-                        return;
-                    }
+                    let area = data.nearest_area[0].areaName[0].value;
+
+                if(area.toLowerCase().includes(city.toLowerCase())){
+                    alert(" Wronge City");
+                    return;
+                }
 
                     let temp = data.current_condition[0].temp_C || "N/A";
                     let weather = data.current_condition[0].weatherDesc[0].value || "N/A";
@@ -176,7 +183,7 @@
                 })
                 .catch(err => {
                     document.getElementById("Loading").style.display = "none"
-                    //alert("Error");
+                     alert("Network issue ⚠️ Try agine");
                 });
         }
 
