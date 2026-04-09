@@ -2,8 +2,10 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width , initial-scale=1.0">
     <title>Weather App</title>
     <style>
+        
         body {
             font-family: arial;
             margin: 0;
@@ -22,6 +24,8 @@
             text-align: center;
             width: 300px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
         }
 
         input {
@@ -69,7 +73,21 @@
         .dark #output{
             background: #2c2c2c;
         }
-        
+         @media(max-width: 600px){
+
+            h1{
+                font-size: 20px;
+            }
+
+            input{
+                width: 100%;
+            }
+
+            button{
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
         
         
     </style>
