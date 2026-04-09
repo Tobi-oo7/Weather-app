@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: arial;
+            margin: 0;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: 0.5s;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        #output {
+            margin-top: 15px;
+            font-weight: 500;
+            border: 1px solid;
+            background: linear-gradient(#e475c8, #74ebd5, #bfb7cc);               
+        }
+
+        .darks{
+            padding: 5px;
+            margin: 15px;
+            border-radius: 10px;
+           
+        }
+
+        .dark{
+            background: #121212 limprotant;
+            color: white;
+        }
+
+        .dark .card{
+            background: #1e1e1e;
+            color: white;
+        }
+        .dark #output{
+            background: #2c2c2c;
+        }
+        
+        
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h3>Weather App 🌦️</h3>
+
+        <input id="city" placeholder="Enter city">
+        <button onclick="getWeather()"> Get Weather</button>
+        <button onclick="getlocationWeather()">My Location</button>
+
+        <button onclick="toggleDark()" class="darks" id="modeBtn"> 🌙Dark </button>
+
+        <p id="Loading" style="display: none;">Loading...</p>
+
+        <div id="output">⛅</div>
+
+    </div>
+
+    <script>
+        function getWeather() {
+
+            let city = document.getElementById("city").value;
+
+            if (city === "") {
+                alert("Enter city");
+                return;
+            }
+
+            document.getElementById("Loading").style.display = "block";
+            document.getElementById("output").innerHTML = "";
+
+            localStorage.setItem("city",city);
+
+            let url = "https://wttr.in/" + city + "?format=j1";
+
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+
+                    let temp = data.current_condition[0].temp_C || "N/A";
+                    let weather = data.current_condition[0].weatherDesc[0].value || "N/A";
+
+                    changeBackground(weather);
+
+                    document.getElementById("Loading").style.display = "none"
+
+                     let icon = getIcon(weather);
+
+                    document.getElementById("output").innerHTML =
+                        
+                        `<span class="lable">🌆 city </span> :   ${city}<br>
+                         <span class="lable">🌡️ Temp</span> :   ${temp}°C <br>
+                         <span class="lable">🌦️ weather </span> : ${icon}  ${weather}`;
+                         
+                        
+                         
+
+                })
+                .catch(err => {
+                    document.getElementById("Loading").style.display = "none"
+                    //alert("Error");
+                });
+        }
+
+        function getlocationWeather(){
+
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(success,error);
+            }else{
+                alert("Location not supported");
+            }
+        }
+
+        function success(pointer){
+            let lat = pointer.coords.latitude;
+            let lon = pointer.coords.longitude;
+
+            let url = "https://wttr.in/" + lat +","+ lon +"?format=j1";
+
+             fetch(url)
+                .then(res => res.json())
+                .then(data => {
+
+                    let temp = data.current_condition[0].temp_C || "N/A";
+                    let weather = data.current_condition[0].weatherDesc[0].value || "N/A";
+
+                      changeBackground(weather);
+
+                      
+
+                    document.getElementById("output").innerHTML = 
+                    `📍Your Location <br>
+                    🌡️ Temp  : ${temp}°C<br>
+                    🌥️ weather :  {weather}`;
+
+                })
+                .catch(() =>{
+                    alert("Error");
+                })
+        }
+
+        function error(){
+            alert("Location access denied");
+        }
+
+        function changeBackground(weather){
+
+            weather = weather.toLowerCase();
+
+            if(weather.includes("sun") || weather.includes("clear")){
+                document.body.style.background = "linear-gradient(to right,#fceabb,#f8b500)";
+            }
+
+            else if(weather.includes("rain")){
+                document.body.style.background = "linear-gradient(to right,#4facfe,#f00f2fe)";
+            }
+
+            else if(weather.includes("cloud")){
+                document.body.style.background = "linear-gradient(to right,#bdc3c7,#2c3e50)";
+            }
+
+            else{
+                document.body.style.background = "linear-gradient(to right,#f1af79,#e4281b)";
+            }
+        }
+
+        function getIcon(weather){
+
+            weather = weather.toLowerCase();
+
+            if(weather.includes("sun") || weather.includes("clear")){
+                return "☀️";
+            }
+
+            else if(weather.includes("rain")){
+                return "🌧️";
+            }
+
+            else if(weather.includes("cloud")){
+                return "☁️";
+            }
+
+            else{
+                return "🌡️";
+            }
+        }
+
+        window.onload = function(){
+
+            let savedCity= localStorage.getItem("city");
+
+            if(savedCity){
+                document.getElementById("city").value = savedCity;
+                getWeather();
+            }
+        }
+
+        function toggleDark(){
+            document.body.classList.toggle("dark");
+
+            let btn = document.getElementById("modeBtn");
+
+            if(document.body.classList.contains("dark")){
+                btn.innerText = "☀️ Light";
+                btn.style.background = "#2980b9";
+                localStorage.getItem("mode","dark");
+            }
+            else{
+                btn.innerText = " 🌙 Dark";
+                btn.style.background = " #2980b9";
+                localStorage.getItem("mode","Light");
+            }
+        }
+
+        window.onload = function(){
+
+            let savedMode = localStorage.getItem("mode");
+
+            if(savedMode === "dark"){
+                document.body.classList.add("dark");
+
+              let btn = document.getElementById("modeBtn");
+              btn.innerText = "dark";  
+            }
+        }
+
+      
+    </script>
+</body>
+
+</html>
