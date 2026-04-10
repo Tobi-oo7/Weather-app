@@ -101,6 +101,29 @@
         .dark #output{
             background: #2c2c2c;
         }
+
+        #Loading{
+            font-weight:bold;
+            margin-top: 10px;
+        }
+
+        .spinner{
+            display: none;
+            margin: 20px auto;
+            width: 40px;
+            height: 40px;
+            border: 5px solid #ffffff;
+            border-top: 5px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin{
+            100%{
+                transform: rotate(360deg);
+            }
+        }
+        
          @media(max-width: 600px){
 
             h1{
@@ -126,13 +149,15 @@
     <div class="card">
         <h3>Weather App 🌦️</h3>
 
-        <input id="city" placeholder="Enter city">
+        <input id="city" placeholder="Enter city" onkeypress="handlekey(event)">
         <button onclick="getWeather()"> Get Weather</button>
         <button onclick="getlocationWeather()">My Location</button>
 
         <button onclick="toggleDark()" class="darks" id="modeBtn"> 🌙Dark </button>
 
-        <p id="Loading" style="display: none;">Loading...</p>
+        <div id="Loading" class="spinner"></div>
+
+        <p id="error" style="color: red;"></p>
 
         <div id="output">⛅</div>
 
@@ -149,12 +174,13 @@
             }
 
              if(city.length < 3 || !/^[a-zA-Z\s]+$/.test(city)){
-                alert("Invalid city");
+                 document.getElementById("error").innerText = "Enter city ❗" ;
                 return;
             }
 
             document.getElementById("Loading").style.display = "block";
             document.getElementById("output").innerHTML = "";
+            document.getElementById("error").innerText =" ";
 
             localStorage.setItem("city",city);
 
@@ -168,7 +194,7 @@
                     let area = data.nearest_area[0].areaName[0].value;
 
                 if(area.toLowerCase().includes(city.toLowerCase())){
-                    alert(" Wronge City");
+                    document.getElementById("error").innerText =" Invalide City ";
                     return;
                 }
 
@@ -193,7 +219,7 @@
                 })
                 .catch(err => {
                     document.getElementById("Loading").style.display = "none"
-                     alert("Network issue ⚠️ Try agine");
+                     document.getElementById("error").innerText ="Network issue ⚠️ Try agine";
                 });
         }
 
@@ -235,7 +261,7 @@
         }
 
         function error(){
-            alert("Location access denied");
+            document.getElementById("error").innerText ="Location access Denied ";
         }
 
         function changeBackground(weather){
@@ -318,6 +344,19 @@
               btn.innerText = "dark";  
             }
         }
+
+        
+        function handlekey(event){
+            if(event.key === "Enter"){
+                getWeather();
+            }
+        }
+
+        document.getElementById("city").addEventListener("keypress",function(event){
+            if(event.key === "Enter"){
+                getWeather();
+            }
+        });
 
       
     </script>
