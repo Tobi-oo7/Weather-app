@@ -82,7 +82,8 @@
             margin-top: 15px;
             font-weight: 500;
             border: 1px solid;
-            background: linear-gradient(#e475c8, #74ebd5, #bfb7cc);               
+            background: linear-gradient(#e475c8, #74ebd5, #bfb7cc);  
+            color:black;
         }
 
         .darks{
@@ -324,12 +325,10 @@
 
             if(document.body.classList.contains("dark")){
                 btn.innerText = "☀️ Light";
-                btn.style.background = "#2980b9";
                 localStorage.getItem("mode","dark");
             }
             else{
                 btn.innerText = " 🌙 Dark";
-                btn.style.background = " #2980b9";
                 localStorage.getItem("mode","Light");
             }
         }
