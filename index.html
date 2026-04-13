@@ -19,6 +19,8 @@
             align-items: center;
             height: 100vh;
             transition: 0.5s;
+            flex-direction: column;
+            min-height: 100hv;
         }
 
         h1{
@@ -98,9 +100,7 @@
             background: #1e1e1e;
             color: white;
         }
-        .dark #output{
-            background: #2c2c2c;
-        }
+    
 
         #Loading{
             font-weight:bold;
@@ -117,6 +117,15 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
+        .footer{
+        text-align: center;
+        margin-top: auto;
+        font-size: 12px;
+        color: black;
+        opacity: 0.8;
+        
+       }
 
         @keyframes spin{
             100%{
@@ -162,6 +171,8 @@
         <div id="output">⛅</div>
 
     </div>
+
+     <footer class="footer">2026 Weather App | Made by Tobi ⚡</footer>
 
     <script>
         function getWeather() {
