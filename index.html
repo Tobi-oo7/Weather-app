@@ -306,16 +306,6 @@
             }
         }
 
-        window.onload = function(){
-
-            let savedCity= localStorage.getItem("city");
-
-            if(savedCity){
-                document.getElementById("city").value = savedCity;
-                getWeather();
-            }
-        }
-
         function toggleDark(){
             document.body.classList.toggle("dark");
 
@@ -357,6 +347,16 @@
                 getWeather();
             }
         });
+
+         window.onload = function(){
+
+            let savedCity= localStorage.getItem("city");
+
+            if(savedCity){
+                document.getElementById("city").value = savedCity;
+                getWeather();
+            }
+        }
 
       
     </script>
